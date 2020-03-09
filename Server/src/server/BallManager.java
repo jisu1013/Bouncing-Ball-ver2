@@ -37,8 +37,7 @@ public class BallManager {
 		String[] list = new String[ballGroups.size()];
 		for(int i = 0;i < ballGroups.size();i++) {
 			list[i] = groupNames.get(i);			
-		}	
-		
+		}		
 		return list;
 	}
 	
@@ -61,12 +60,13 @@ public class BallManager {
 		String[] list = this.getGroupNameList();
 		boolean check = false;
 		for(int i=0;i < list.length;i++) {
+			System.out.println("list");
+			System.out.println(list[i]);
 			if(list[i].equals(group))
 				check = true;
 			else
 				check = false;
-		}
-		
+		}		
 		return check;
 	}
 	

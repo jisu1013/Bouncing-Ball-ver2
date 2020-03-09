@@ -120,10 +120,7 @@ public class ServerCore {
 		if(i == 1)
 			messageToClient = "success";
 		else
-			messageToClient = "fail";
-		//System.out.println(messageToClient);
-		//out.println(messageToClient);
-		//out.flush();//Àü¼Û		
+			messageToClient = "fail";		
 	}
 	
 	public void startBallMoving(String[] line) {		
@@ -181,9 +178,22 @@ public class ServerCore {
 		int red = Integer.parseInt(line[2]);
 		int green = Integer.parseInt(line[3]);
 		int blue = Integer.parseInt(line[4]);
-		Color groupColor = new Color(red, green, blue);		
-		ballManager.addGroup(groupName, groupColor);
-		//this.sendMessage(1);
+		Color groupColor = new Color(red, green, blue);
+		System.out.println("addGroup");
+		System.out.println(groupName);
+		if(groupName.equals("")) {
+			view.errorDiglog();
+			this.sendMessage(0);
+		}
+		else if(ballManager.checkGroupList(groupName)) {
+			view.errorDiglog();
+			this.sendMessage(0);
+		}
+		else {
+			System.out.println(groupName);
+			ballManager.addGroup(groupName, groupColor);
+			this.sendMessage(1);			
+		}
 	}
 	
 	public void removeGroup(String[] line) {

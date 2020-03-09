@@ -18,7 +18,8 @@ public class ClientCore {
 	private PrintWriter out;
 	private String messageToServer;
 	private String messageFromServer;
-	private boolean eventFlag;	
+	private boolean eventFlag;
+	private int buttonNumber;
 			
 	public ClientCore() {
 		buttonListener = new ButtonListener(this);
@@ -26,7 +27,8 @@ public class ClientCore {
 		view.setButtonListener(buttonListener);
 		messageToServer = null;
 		messageFromServer = null;		
-		eventFlag = false;	
+		eventFlag = false;
+		buttonNumber = 0;
 		this.connect();
 	}
 	
@@ -42,7 +44,8 @@ public class ClientCore {
 					break;				
 				if(eventFlag) {
 					this.sendMessage();//송신
-					this.receiveMessage();//수신						
+					this.receiveMessage();//수신
+					this.doAction();
 					eventFlag = false;					
 				}
 			}			
@@ -63,29 +66,50 @@ public class ClientCore {
 		messageFromServer = in.readLine();
 		System.out.println(messageFromServer);
 	}
+	
+	public void doAction() {
+		String groupName;
+		if(buttonNumber == 5) {
+			if(messageFromServer.equals("success")) {
+				groupName = view.getGroupFieldText();
+				view.addComboBoxGroup(groupName);
+			}
+		}
+		else if(buttonNumber == 6) {
+			if(messageFromServer.equals("success")) {
+				groupName = view.getComboBoxGroup();
+				view.removeComboBoxGroup(groupName);
+			}
+		}
+		System.out.println("do action");
+	}
 		
 	public void clickStartButton() {
 		String groupName = view.getComboBoxGroup();
 		messageToServer = "startButton" + ":" + groupName;		
-		eventFlag = true;	
+		eventFlag = true;
+		buttonNumber = 1;
 	}	
 	
 	public void clickStopButton() {
 		String groupName = view.getComboBoxGroup();
 		messageToServer = "stopButton" + ":" + groupName;		
-		eventFlag = true;	
+		eventFlag = true;
+		buttonNumber = 2;
 	}
 	
 	public void clickAddBallButton() {
 		String groupName = view.getComboBoxGroup();	
 		messageToServer = "addBallButton" + ":" + groupName;		
 		eventFlag = true;
+		buttonNumber = 3;
 	}
 	
 	public void clickRemoveBallButton() {
 		String groupName = view.getComboBoxGroup();
 		messageToServer = "removeBallButton" + ":" + groupName;		
-		eventFlag = true;		
+		eventFlag = true;
+		buttonNumber = 4;
 	}
 	
 	public void clickAddGroupButton() {
@@ -95,16 +119,19 @@ public class ClientCore {
 		String blue = Integer.toString(groupColor.getBlue());
 		String green = Integer.toString(groupColor.getGreen());
 		messageToServer = "addGroupButton" + ":" 
-					+ groupName + ":" + red + ":" + green + ":" + blue;			
-		view.addComboBoxGroup(groupName);
-		eventFlag = true;	
+				+ groupName + ":" + red + ":" + green + ":" + blue;			
+		buttonNumber = 5;
+		eventFlag = true;
+		System.out.println(messageToServer);
+		//view.addComboBoxGroup(groupName);
 	}
 	
 	public void clickRemoveGroupButton() {
 		String groupName = view.getComboBoxGroup();
-		messageToServer = "removeGroupButton" + ":" + groupName;		
-		view.removeComboBoxGroup(groupName);
-		eventFlag = true;			
+		messageToServer = "removeGroupButton" + ":" + groupName;
+		buttonNumber = 6;
+		eventFlag = true;	
+		//view.removeComboBoxGroup(groupName);				
 	}	
 	
 	public static void main(String[] args) {
